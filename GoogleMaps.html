@@ -22,9 +22,16 @@
 <script>
 
     function initMap() {
+
         var myLatLng = [
         {% for each in koordenatuak %}
             { lat: {{ each[0] }}, lng: {{ each[1] }} },
+        {% endfor %}
+        ];
+
+        var titles = [
+        {% for each in izenak %}
+            { title: {{each[0]}} },
         {% endfor %}
         ];
 
@@ -34,10 +41,13 @@
         });
 
         for(i = 0; i < myLatLng.length; i++) {
-            var marker = new google.maps.Marker({
-                position: myLatLng[i],
-                map: map,
-            });
+            for (j = 0; j < titles.length; j++) {
+                var marker = new google.maps.Marker({
+                    position: myLatLng[i],
+                    map: map,
+                    title: titles[j]
+                });
+            }
         };
     }
 
