@@ -43,8 +43,8 @@ class LoginAndAuthorize(BaseHandler):
         conn = httplib.HTTPSConnection(zerbitzaria)
         conn.connect()
         metodoa = 'GET'
-        params = {'client_id': '158296640724-hre0looouj6i8aen0k1at0ape4k2ap7o.apps.googleusercontent.com',
-                  'redirect_uri': 'https://youtube-api-itocho.appspot.com/Callback_URI',
+        params = {'client_id': '158296640724-bpml9lv2kut0n2n40io4jsuoeg9jm2cs.apps.googleusercontent.com',
+                  'redirect_uri': 'http://youtube-api-itocho.appspot.com/callback_uri',
                   'response_type': 'code',
                   'scope': 'https://www.googleapis.com/auth/youtube',
                   'approval_prompt': 'auto',
@@ -63,9 +63,9 @@ class OAuthHandler(BaseHandler):
         uri = '/o/oauth2/token'
         auth_code = self.request.get('code')
         params = {'code': auth_code,
-                  'client_id': '158296640724-hre0looouj6i8aen0k1at0ape4k2ap7o.apps.googleusercontent.com',
-                  'client_secret': 'YDNDrE_wF2fVkY-KpyZR2PMg',
-                  'redirect_uri': 'https://youtube-api-itocho.appspot.com/Callback_URI',
+                  'client_id': '158296640724-bpml9lv2kut0n2n40io4jsuoeg9jm2cs.apps.googleusercontent.com',
+                  'client_secret': 'hp0SIzs4qRaCvCXbSgdH_0WL',
+                  'redirect_uri': 'http://youtube-api-itocho.appspot.com/callback_uri',
                   'grant_type': 'authorization_code'}
         params_encoded = urllib.urlencode(params)
         goiburuak = {'Host': zerbitzaria,
@@ -129,6 +129,6 @@ class FormularioaHartu(BaseHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/LoginAndAuthorize', LoginAndAuthorize),
-    ('/Callback_URI', OAuthHandler),
+    ('/callback_uri', OAuthHandler),
     ('/tokena', Youtube),
     ('/formularioa', FormularioaHartu)], config=config, debug=True)
