@@ -110,7 +110,7 @@ class FormularioaHartu(BaseHandler):
         location_radius = self.request.get('locationRadius')
         zerbitzaria = 'www.googleapis.com'
         uri = '/youtube/v3/search'
-        metodoa = 'POST'
+        metodoa = 'GET'
         params = {'part': 'snippet',
                   'location': location,
                   'locationRadius': location_radius,
@@ -119,19 +119,19 @@ class FormularioaHartu(BaseHandler):
                   'type': 'video'}
         params_encoded = urllib.urlencode(params)
         goiburuak = {'Host': zerbitzaria,
-                     'Authorization': 'Bearer ' + access_token,
-                     'Content-Type': 'application/octet-stream'}
+                     'Authorization': 'Bearer ' + access_token}
         http = httplib2.Http()
-        erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, headers=goiburuak)
+        erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, method=metodoa, headers=goiburuak)
         json_erantzuna = json.loads(edukia)
 
         koordenatuak = self.get_koordenatuak(json_erantzuna)
         #self.response.write(koordenatuak)
 
-        datuak = {'location': location,
+        location_split = location.split(',')
+        datuak = {'location': [location_split[0],location_split[1]],
                   'koordenatuak': koordenatuak}
 
-        template = JINJA_ENVIRONMENT.get_template('/html/GoogleMaps.html')
+        template = JINJA_ENVIRONMENT.get_template('/GoogleMaps.html')
         self.response.write(template.render(datuak))
 
     def get(self):
@@ -151,10 +151,9 @@ class FormularioaHartu(BaseHandler):
                       'id': video_id}
             params_encoded = urllib.urlencode(params)
             goiburuak = {'Host': zerbitzaria,
-                         'Authorization': 'Bearer ' + access_token,
-                         'Content-Type': 'application/octet-stream'}
+                         'Authorization': 'Bearer ' + access_token}
             http = httplib2.Http()
-            erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, headers=goiburuak)
+            erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, method=metodoa, headers=goiburuak)
             json_erantzuna2 = json.loads(edukia)
             if json_erantzuna2['items'][0].has_key('recordingDetails'):
                 recording_details = json_erantzuna2['items'][0]['recordingDetails']
@@ -164,9 +163,6 @@ class FormularioaHartu(BaseHandler):
                     koordenatuak.append([latitude, longitude])
 
         return koordenatuak
-
-
-
 
 
 app = webapp2.WSGIApplication([

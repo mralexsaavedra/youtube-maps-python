@@ -30,20 +30,15 @@
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 4,
-            center: {lat: 43.2603479, lng: -2.5334110}
+            center: { lat: {{location[0]}}, lng: {{location[1]}} }
         });
 
-        var marker = new google.maps.Marker({
-            position: myLatLng[0],
-            map: map,
-            title: 'Hello World 1!'
-        });
-
-        var marker1 = new google.maps.Marker({
-            position: myLatLng[1],
-            map: map,
-            title: 'Hello World 2!'
-        });
+        for(i = 0; i < myLatLng.length; i++) {
+            var marker = new google.maps.Marker({
+                position: myLatLng[i],
+                map: map,
+            });
+        };
     }
 
 </script>
