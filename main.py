@@ -124,12 +124,49 @@ class FormularioaHartu(BaseHandler):
         http = httplib2.Http()
         erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, headers=goiburuak)
         json_erantzuna = json.loads(edukia)
-        for each in json_erantzuna['items']:
-            video_id = each['id']['videoId']
-            self.response.write(video_id+'<br/>')
+
+        koordenatuak = self.get_koordenatuak(json_erantzuna)
+        #self.response.write(koordenatuak)
+
+        datuak = {'location': location,
+                  'koordenatuak': koordenatuak}
+
+        template = JINJA_ENVIRONMENT.get_template('/html/GoogleMaps.html')
+        self.response.write(template.render(datuak))
 
     def get(self):
         self.redirect('/html/Formulario.html')
+
+    def get_koordenatuak(self, json_erantzuna):
+        koordenatuak = []
+        for each in json_erantzuna['items']:
+            video_id = each['id']['videoId']
+            #self.response.write(video_id + '<br/>')
+
+            access_token = self.session.get('access_token')
+            zerbitzaria = 'www.googleapis.com'
+            uri = '/youtube/v3/videos'
+            metodoa = 'GET'
+            params = {'part': 'id,snippet,recordingDetails',
+                      'id': video_id}
+            params_encoded = urllib.urlencode(params)
+            goiburuak = {'Host': zerbitzaria,
+                         'Authorization': 'Bearer ' + access_token,
+                         'Content-Type': 'application/octet-stream'}
+            http = httplib2.Http()
+            erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, headers=goiburuak)
+            json_erantzuna2 = json.loads(edukia)
+            if json_erantzuna2['items'][0].has_key('recordingDetails'):
+                recording_details = json_erantzuna2['items'][0]['recordingDetails']
+                if recording_details.has_key('location'):
+                    latitude = recording_details['location']['latitude']
+                    longitude = recording_details['location']['longitude']
+                    koordenatuak.append([latitude, longitude])
+
+        return koordenatuak
+
+
+
 
 
 app = webapp2.WSGIApplication([
