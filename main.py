@@ -90,11 +90,11 @@ class Youtube(BaseHandler):
         zerbitzaria = 'www.googleapis.com'
         metodoa = 'GET'
         uri = '/youtube/v3/channels?part=id&mine=true'
-        params = {'Host': zerbitzaria,
+        goiburuak = {'Host': zerbitzaria,
                   'Authorization': 'Bearer ' + access_token,
                   'Content-Type': 'application/octet-stream'}
         http = httplib2.Http()
-        erantzuna, edukia = http.request('https://' + zerbitzaria + uri, method=metodoa, headers=params)
+        erantzuna, edukia = http.request('https://' + zerbitzaria + uri, method=metodoa, headers=goiburuak)
 
         logging.debug(erantzuna)
         logging.debug(edukia)
@@ -111,19 +111,25 @@ class FormularioaHartu(BaseHandler):
         zerbitzaria = 'www.googleapis.com'
         uri = '/youtube/v3/search'
         metodoa = 'POST'
-        params = {'Authorization': 'Bearer ' + access_token,
-                  'part': 'snippet',
+        params = {'part': 'snippet',
                   'location': location,
                   'locationRadius': location_radius,
                   'maxResults': 50,
                   'q': query,
                   'type': 'video'}
         params_encoded = urllib.urlencode(params)
+        goiburuak = {'Host': zerbitzaria,
+                     'Authorization': 'Bearer ' + access_token,
+                     'Content-Type': 'application/octet-stream'}
         http = httplib2.Http()
-        erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded)
+        erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, headers=goiburuak)
+        json_erantzuna = json.loads(edukia)
+        for each in json_erantzuna['items']:
+            video_id = each['id']['videoId']
+            self.response.write(video_id+'<br/>')
 
     def get(self):
-        self.redirect('/YoutubeiTocho/Formulario.html')
+        self.redirect('/html/Formulario.html')
 
 
 app = webapp2.WSGIApplication([
