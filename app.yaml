@@ -10,7 +10,7 @@ handlers:
   upload: favicon\.ico
 
 - url: .*
-  script: /YoutubeiTocho/main.app
+  script: main.app
 
 libraries:
 - name: webapp2
