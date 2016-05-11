@@ -25,15 +25,9 @@
 
         var myLatLng = [
         {% for each in koordenatuak %}
-            { lat: {{ each[0] }}, lng: {{ each[1] }} },
+            { lat: {{ each[0] }}, lng: {{ each[1] }}, title: '{{each[2]}}' },
         {% endfor %}
         ];
-
-        /*var titles = [
-        {% for each in izenak %}
-            { title: {{each}} },
-        {% endfor %}
-        ];*/
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 4,
@@ -41,22 +35,14 @@
         });
 
         for(i = 0; i < myLatLng.length; i++) {
-            var marker = new google.maps.Marker({
-                position: myLatLng[i],
-                map: map,
-            });
-        };
-
-        /*for(i = 0; i < myLatLng.length; i++) {
-            for (j = 0; j < titles.length; j++) {
                 var marker = new google.maps.Marker({
-                    position: myLatLng[i],
-                    map: map,
-                    title: titles[i][j]
+                    position: { lat: myLatLng[i]['lat'], lng: myLatLng[i]['lng'] },
+                    title: myLatLng[i]['title'],
+                    map: map
+
                 });
-            };
-        };*/
-    }
+        };
+    };
 
 </script>
 <script async defer
