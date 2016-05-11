@@ -124,15 +124,14 @@ class FormularioaHartu(BaseHandler):
         erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, method=metodoa,
                                          headers=goiburuak)
         json_erantzuna = json.loads(edukia)
-        #self.response.write(edukia)
 
         koordenatuak = self.get_koordenatuak(json_erantzuna)
-        izenak = self.get_izenak(json_erantzuna)
+        #izenak = self.get_izenak(json_erantzuna)
         location_split = location.split(',')
 
         datuak = {'location': [location_split[0], location_split[1]],
-                  'koordenatuak': koordenatuak,
-                  'izenak': izenak}
+                  'koordenatuak': koordenatuak}
+        #'izenak': izenak
 
         template = JINJA_ENVIRONMENT.get_template('/GoogleMaps.html')
         self.response.write(template.render(datuak))
@@ -144,8 +143,6 @@ class FormularioaHartu(BaseHandler):
         koordenatuak = []
         for each in json_erantzuna['items']:
             video_id = each['id']['videoId']
-            # self.response.write(video_id + '<br/>')
-
             access_token = self.session.get('access_token')
             zerbitzaria = 'www.googleapis.com'
             uri = '/youtube/v3/videos'
@@ -160,7 +157,6 @@ class FormularioaHartu(BaseHandler):
                                              headers=goiburuak)
 
             json_erantzuna2 = json.loads(edukia)
-            #self.response.write(json_erantzuna2)
 
             if json_erantzuna2['items'][0].has_key('recordingDetails'):
                 recording_details = json_erantzuna2['items'][0]['recordingDetails']
@@ -171,32 +167,32 @@ class FormularioaHartu(BaseHandler):
 
         return koordenatuak
 
-    def get_izenak(self, json_erantzuna):
-        izenak = []
-        for each in json_erantzuna['items']:
-            video_id = each['id']['videoId']
-            access_token = self.session.get('access_token')
-            zerbitzaria = 'www.googleapis.com'
-            uri = '/youtube/v3/videos'
-            metodoa = 'GET'
-            params = {'part': 'id,snippet,recordingDetails',
-                      'id': video_id}
-            params_encoded = urllib.urlencode(params)
-            goiburuak = {'Host': zerbitzaria,
-                         'Authorization': 'Bearer ' + access_token}
-            http = httplib2.Http()
-            erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, method=metodoa,
-                                             headers=goiburuak)
-
-            json_erantzuna2 = json.loads(edukia)
-
-            if json_erantzuna2['items'][0].has_key('snippet'):
-                snippet = json_erantzuna2['items'][0]['snippet']
-                if snippet.has_key('title'):
-                    title = snippet['title']('title')
-                    izenak.append(title)
-
-        return izenak
+    # def get_izenak(self, json_erantzuna):
+    #     izenak = []
+    #     for each in json_erantzuna['items']:
+    #         video_id = each['id']['videoId']
+    #         access_token = self.session.get('access_token')
+    #         zerbitzaria = 'www.googleapis.com'
+    #         uri = '/youtube/v3/videos'
+    #         metodoa = 'GET'
+    #         params = {'part': 'id,snippet,recordingDetails',
+    #                   'id': video_id}
+    #         params_encoded = urllib.urlencode(params)
+    #         goiburuak = {'Host': zerbitzaria,
+    #                      'Authorization': 'Bearer ' + access_token}
+    #         http = httplib2.Http()
+    #         erantzuna, edukia = http.request('https://' + zerbitzaria + uri + '?' + params_encoded, method=metodoa,
+    #                                          headers=goiburuak)
+    #
+    #         json_erantzuna2 = json.loads(edukia)
+    #
+    #         if json_erantzuna2['items'][0].has_key('snippet'):
+    #             snippet = json_erantzuna2['items'][0]['snippet']
+    #             if snippet.has_key('title'):
+    #                 title = snippet['title']
+    #                 izenak.append(title)
+    #
+    #     return izenak
 
 
 app = webapp2.WSGIApplication([

@@ -29,11 +29,11 @@
         {% endfor %}
         ];
 
-        var titles = [
+        /*var titles = [
         {% for each in izenak %}
-            { title: {{each[0]}} },
+            { title: {{each}} },
         {% endfor %}
-        ];
+        ];*/
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 4,
@@ -41,14 +41,21 @@
         });
 
         for(i = 0; i < myLatLng.length; i++) {
+            var marker = new google.maps.Marker({
+                position: myLatLng[i],
+                map: map,
+            });
+        };
+
+        /*for(i = 0; i < myLatLng.length; i++) {
             for (j = 0; j < titles.length; j++) {
                 var marker = new google.maps.Marker({
                     position: myLatLng[i],
                     map: map,
-                    title: titles[j]
+                    title: titles[i][j]
                 });
-            }
-        };
+            };
+        };*/
     }
 
 </script>
