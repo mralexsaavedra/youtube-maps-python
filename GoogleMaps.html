@@ -25,7 +25,7 @@
 
         var myLatLng = [
         {% for each in koordenatuak %}
-            { lat: {{ each[0] }}, lng: {{ each[1] }}, title: '{{each[2]}}' },
+            { lat: {{ each[0] }}, lng: {{ each[1] }}, title: '{{ each[2] }}' },
         {% endfor %}
         ];
 

@@ -42,7 +42,6 @@ class LoginAndAuthorize(BaseHandler):
         zerbitzaria = 'accounts.google.com'
         conn = httplib.HTTPSConnection(zerbitzaria)
         conn.connect()
-        metodoa = 'GET'
         params = {'client_id': '158296640724-bpml9lv2kut0n2n40io4jsuoeg9jm2cs.apps.googleusercontent.com',
                   'redirect_uri': 'http://youtube-api-itocho.appspot.com/callback_uri',
                   'response_type': 'code',
@@ -76,8 +75,8 @@ class OAuthHandler(BaseHandler):
         erantzuna, edukia = http.request('https://' + zerbitzaria + uri, method=metodoa, headers=goiburuak,
                                          body=params_encoded)
 
-        jsonEdukia = json.loads(edukia)
-        access_token = jsonEdukia['access_token']
+        json_edukia = json.loads(edukia)
+        access_token = json_edukia['access_token']
         self.session['access_token'] = access_token
 
         self.redirect('/tokena')
@@ -168,7 +167,6 @@ class FormularioaHartu(BaseHandler):
                             koordenatuak.append([latitude, longitude, title])
 
         return koordenatuak
-
 
 
 app = webapp2.WSGIApplication([
