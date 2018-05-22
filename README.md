@@ -1,3 +1,3 @@
 # YoutubeiTocho
 
-esta to iPotente iGalder es un iTonto
+Buscador de videos de YouTube.
